@@ -6,12 +6,13 @@ import { allUsersRoute, host } from '../utils/APIRoutes';
 import Contacts from '../components/Contacts';
 import Welcome from '../components/Welcome';
 import ChatContainer from '../components/ChatContainer';
+import SideNavBar from '../components/SideNavBar';
 import {io} from 'socket.io-client'
 
 export default function Chat() {
 
   const navigate = useNavigate();
-  const [contacts, setContacts] = useState([]);
+  const [allContacts, setAllContacts] = useState([]);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [currentChat, setCurrentChat] = useState(undefined);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -37,7 +38,7 @@ export default function Chat() {
     {  if(currentUser){
         if(currentUser.isAvatarImageSet){
           const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-          setContacts(data.data);
+          setAllContacts(data.data);
         }
         else{
           navigate("/setAvatar");
@@ -61,7 +62,8 @@ const handleChatChange = (chat) => {
   return (
     <Container>
       <div className="container">
-          <Contacts contacts = {contacts} currentUser={currentUser} changeChat = {handleChatChange}/>
+          <SideNavBar currentUser ={currentUser}/>
+          <Contacts allContacts = {allContacts} currentUser={currentUser} changeChat = {handleChatChange}/>
           {
             isLoaded && currentChat===undefined ? 
               <Welcome /> :
@@ -80,15 +82,17 @@ flex-direction:column;
 justify-content: center;
 gap:1rem;
 align-items:center;
-background-color:#131324;
+background-color:#f4f0ec ;
+// background-color:#bcd4e6;
+// background: linear-gradient(to bottom, #b3d7f5, #6ba7e4);
+
 .container{
-  height:85vh;
-  width:85vw;
-  background-color:#00000076;
+  height:95vh;
+  width:95vw;
+  // background-color:#e2eff6;
+  background-color:white;
+  border-radius: 2rem;
   display:grid;
-  grid-template-columns: 25% 75%;
-  @media screen and (min-width:720px) and (max-width:1080px){
-    grid-template-columns: 35% 65%;
-  } 
+  grid-template-columns: 8% 27% 65%;
 }
 `;

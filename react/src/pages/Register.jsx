@@ -18,7 +18,7 @@ export default function Register() {
 
     useEffect(()=> {
         if(localStorage.getItem('baat-cheet-user')){
-          navigate('/');
+          navigate('/chat');
         }
       },[navigate]);
       
@@ -32,6 +32,7 @@ export default function Register() {
         pauseOnHover: true,
         draggable: true,
         theme: "dark",
+        hideProgressBar: true,
     };
 
     const handleValidation = () => {
@@ -77,7 +78,7 @@ export default function Register() {
             }
             if(data.status===true){
                 localStorage.setItem('baat-cheet-user',JSON.stringify(data.user));
-                navigate("/");
+                navigate("/chat");
             }
         }
     };
@@ -130,7 +131,9 @@ height: 100vh;
   justify-content: center;
   gap: 1rem;
   align-items: center;
-  background-color: #131324;
+  // background-color: #bcd4e6 ;
+  background: linear-gradient(to bottom, #b3d7f5, #6ba7e4);
+
   .brand {
     display: flex;
     align-items: center;
@@ -138,7 +141,7 @@ height: 100vh;
     justify-content: center;
     img {
       height: 5rem;
-      background-color: #00000076;
+      background-color: #e2eff6;
     }
     h1 {
       color: white;
@@ -150,7 +153,7 @@ height: 100vh;
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    background-color: #00000076;
+    background-color: #e2eff6;
     border-radius: 2rem;
     padding: 3rem 5rem;
   }
@@ -159,16 +162,16 @@ height: 100vh;
     padding: 1rem;
     border: 0.1rem solid #4e0eff;
     border-radius: 0.4rem;
-    color: white;
+    color:#003153 ;
     width: 100%;
     font-size: 1rem;
     &:focus {
-      border: 0.1rem solid #997af0;
+      border: 0.1rem solid #1c2841;
       outline: none;
     }
   }
   button {
-    background-color: #4e0eff;
+    background-color: #f33e3e;
     color: white;
     padding: 1rem 2rem;
     border: none;
@@ -178,14 +181,14 @@ height: 100vh;
     font-size: 1rem;
     text-transform: uppercase;
     &:hover {
-      background-color: #4e0eff;
+      background-color: #45b1e8;
     }
   }
   span {
-    color: white;
+    color: #003153;
     text-transform: uppercase;
     a {
-      color: #4e0eff;
+      color: #45b1e8;
       text-decoration: none;
       font-weight: bold;
     }

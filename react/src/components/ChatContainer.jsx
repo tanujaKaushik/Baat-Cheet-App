@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
-import Logout from "./Logout";
+// import Logout from "./Logout";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { sendMessageRoute, receiveMessageRoute } from "../utils/APIRoutes";
@@ -21,6 +21,7 @@ export default function ChatContainer({ currentChat, socket }) {
             to: currentChat._id,
         });
         setMessages(response.data);
+        // console.log(response.data);
       }
   };
   loadMessages();
@@ -41,29 +42,33 @@ export default function ChatContainer({ currentChat, socket }) {
     const data = await JSON.parse(
       localStorage.getItem('baat-cheet-user')
     );
-    socket.current.emit("send-msg", {
-      to: currentChat._id,
-      from: data._id,
-      msg,
-    });
+    
     await axios.post(sendMessageRoute, {
       from: data._id,
       to: currentChat._id,
       message: msg,
     });
 
+    socket.current.emit("send-msg", {
+      to: currentChat._id,
+      from: data._id,
+      msg,
+      time: new Date().toISOString(),
+    });
+
     const msgs = [...messages];
-    msgs.push({ fromSelf: true, message: msg });
+    msgs.push({ fromSelf: true, message: msg ,time:new Date().toISOString() });
     setMessages(msgs);
+    // console.log(messages);
   };
 
   useEffect(() => {
     if (socket.current) {
       socket.current.on("msg-receive", (msg) => {
-        setArrivalMessage({ fromSelf: false, message: msg });
+        setArrivalMessage({ fromSelf: false, message: msg ,time:new Date().toISOString() });
       });
     }
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
@@ -94,15 +99,14 @@ export default function ChatContainer({ currentChat, socket }) {
             </h3>
           </div>
         </div>
-        <Logout />
+        {/* <Logout /> */}
       </div>
-
+   
       {/*  Chat Messages */}
       <div className="chat-messages">
         {messages.map((message) => {
           return (
             <div ref={scrollRef} key={uuidv4()}>
-            {/* <div> */}
               <div
                 className={`message ${
                   message.fromSelf ? "sended" : "received"
@@ -110,6 +114,11 @@ export default function ChatContainer({ currentChat, socket }) {
               >
                   <div className="content ">
                     <p>{message.message}</p>
+                    <div className="timestamp">
+                      <p>
+                          {new Date(message.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
                   </div>
               </div>
             </div>
@@ -130,14 +139,13 @@ const Container = styled.div`
   grid-template-rows: 10% 80% 10%;
   gap: 0.1rem;
   overflow: hidden;
-  @media screen and (min-width: 720px) and (max-width: 1080px) {
-    grid-template-rows: 15% 70% 15%;
-  }
   .chat-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
+    border-bottom: 1px solid #c4e0f9;
+    background-color:#f8f8ff ;
     .user-details {
       display: flex;
       align-items: center;
@@ -149,16 +157,16 @@ const Container = styled.div`
       }
       .username {
         h3 {
-          color: white;
+          color: #1c2841;
         }
       }
     }
   }
   .chat-messages {
-    padding: 1rem 2rem;
+    padding: 0.4rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.3rem;
     overflow: auto;
     &::-webkit-scrollbar {
       width: 0.2rem;
@@ -172,27 +180,46 @@ const Container = styled.div`
       display: flex;
       align-items: center;
       .content {
-        max-width: 40%;
+        display:flex;
+        max-width: 70%;
         overflow-wrap: break-word;
-        padding: 1rem;
-        font-size: 1.1rem;
-        border-radius: 1rem;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        border-radius: 0.5rem;
         color: #d1d1d1;
-        @media screen and (min-width: 720px) and (max-width: 1080px) {
-          max-width: 70%;
+        // @media screen and (min-width: 720px) and (max-width: 1080px) {
+        //   max-width: 70%;
+        // }
+        .timestamp{
+          display:flex;
+          align-items:flex-end;
+          margin-left: 0.6rem;
+          font-size:0.7rem;
         }
       }
     }
     .sended {
       justify-content: flex-end;
       .content {
-        background-color: #4f04ff21;
+        // background-color: #f33e3e;
+        // background-color: #ff7f50 ;
+        background-color: #ffcc99   ;
+        // background: linear-gradient(to right , #f33e3e, #ff7f50  ,#f33e3e);
+        color: #000036 ;
+        box-shadow: 0px 2px 3px rgba(100,100,100,.15);
+        .timestamp{
+          color:gray;
+        }
       }
     }
     .received {
       justify-content: flex-start;
       .content {
-        background-color: #9900ff20;
+        color:#1c2841; 
+        background-color: #eaf4fa ;
+        box-shadow: 0px 2px 3px rgba(100,100,100,.15);
+        .timestamp{
+          color:#a1a1aa;
       }
     }
   }

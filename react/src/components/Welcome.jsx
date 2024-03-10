@@ -25,14 +25,14 @@ const Container = styled.div`
 display: flex;
 justify-content: center;
 align-items: center;
-color: white;
 flex-direction: column;
+color: #1c2841 ;
 img {
-  height: 20rem;
+  height: 15rem;
   margin: 2rem;
 }
 span {
-  color: #4e0eff;
+  color: #f33e3e;
   text-transform: capitalize;
 }
 `;

@@ -16,6 +16,7 @@ export default function SetAvatar() {
         pauseOnHover: true,
         draggable: true,
         theme: "dark",
+        hideProgressBar: true
     };
 
     const navigate = useNavigate();
@@ -64,7 +65,7 @@ export default function SetAvatar() {
                 "baat-cheet-user",
                 JSON.stringify(user)
               );
-              navigate("/");
+              navigate("/chat");
             } else {
               toast.error("Error setting avatar. Please try again.", toastOptions);
             }
