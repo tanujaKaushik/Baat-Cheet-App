@@ -1,0 +1,50 @@
+Write JSP Programme to print current date and time along with timestamp, 
+implement auto-refresh of a page
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Current Date and Time</title>
+    <script>
+        // Function to reload the page every 5 seconds
+        function autoRefresh() {
+            setTimeout(function() {
+                window.location.reload();
+            }, 5000); // 5000 milliseconds = 5 seconds
+        }
+        
+        // Call autoRefresh function when page loads
+        window.onload = autoRefresh;
+    </script>
+</head>
+<body>
+    <h2>Current Date and Time</h2>
+    <p>Date and Time: <%= new java.util.Date() %></p>
+    <p>Timestamp (milliseconds): <%= System.currentTimeMillis() %></p>
+</body>
+</html>
+
+
+
+0r 
+
+
+
+<%@ page import="java.util.*" %>
+<html>
+<head>
+<title>Current Date and Time with Auto-Refresh</title>
+<meta http-equiv="refresh" content="5; url=index.jsp">  </head>
+<body>
+  <h2>Current Date and Time</h2>
+  <%
+    Date currentDate = new Date();
+    String formattedDate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentDate);
+    long timestamp = currentDate.getTime();
+  %>
+  <p>Current Date and Time: <%= formattedDate %></p>
+  <p>Timestamp (milliseconds since epoch): <%= timestamp %></p>
+</body>
+</html>

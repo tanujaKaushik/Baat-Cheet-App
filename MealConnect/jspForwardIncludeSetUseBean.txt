@@ -1,0 +1,92 @@
+Write a JSP application using following Action Elements 
+a. jsp:forward 
+b. jsp:include 
+c. set & getProperty 
+d. jsp:useBean
+
+
+Step-by-Step Example: JSP Application
+
+
+1. Create JavaBean Class (UserBean.java)
+
+package com.example.beans;
+
+import java.io.Serializable;
+
+public class UserBean implements Serializable {
+    private String username;
+    private String email;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}
+
+
+
+2. Create JSP Pages
+
+index.jsp  ( This page initializes a UserBean and forwards the request to userInfo.jsp.)
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/beans" prefix="jsp" %>
+<%@ page import="com.example.beans.UserBean" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Index Page</title>
+</head>
+<body>
+    <jsp:useBean id="user" class="com.example.beans.UserBean" scope="session" />
+    <jsp:setProperty name="user" property="username" value="John Doe" />
+    
+    <jsp:forward page="userInfo.jsp" />
+</body>
+</html>
+
+
+-------->userInfo.jsp 
+(This page includes index.jsp and displays user information using jsp:getProperty.) 
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/beans" prefix="jsp" %>
+<%@ page import="com.example.beans.UserBean" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>User Information</title>
+</head>
+<body>
+    <h2>User Information</h2>
+    
+    <jsp:include page="index.jsp" />
+    
+    <c:out value="Username: ${user.username}" /><br>
+    <c:out value="Email: ${user.email}" /><br>
+    
+    <jsp:setProperty name="user" property="email" value="john.doe@example.com" />
+    <c:out value="Updated Email: ${user.email}" /><br>
+</body>
+</html>
+

@@ -1,0 +1,160 @@
+Create a Form to capture Student Admission information (make usual 
+assumptions about the attributes) using Spring Form tags (must use Text, 
+textarea, dropdown, date picker, true/false and checkbox) and write a 
+controller using @PostMapping() to display the form information. 
+
+your_project/
+├── src/main/java/
+│   └── com/example/
+│       ├── controller/
+│       │   └── StudentAdmissionController.java
+│       └── model/
+│           └── Student.java
+├── src/main/webapp/
+│   ├── student_form.jsp
+│   └── student_details.jsp
+└── pom.xml
+
+------->2. Student.java (Model Class):
+
+
+package com.example.model;
+
+import java.util.Date;
+
+public class Student {
+
+    private int id; // Assume an ID is generated elsewhere
+    private String name;
+    private String email;
+    private String address;
+    private String phone;
+    private String program; // Dropdown options
+    private Date dob;
+    private boolean isFullTime;
+    private String[] courses; // Checkbox options
+
+    // Getters, Setters, and Constructor (omitted for brevity)
+}
+
+--->3. student_form.jsp:
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Admission Form</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<h2>Student Admission Form</h2>
+
+<form:form action="submitAdmission" method="post" modelAttribute="student">
+
+  <div class="form-group">
+    <label for="name">Name:</label>
+    <form:input type="text" class="form-control" path="name" required="true"/>
+    <form:errors path="name" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <form:input type="email" class="form-control" path="email" required="true"/>
+    <form:errors path="email" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-group">
+    <label for="address">Address:</label>
+    <form:textarea class="form-control" path="address" rows="3"></form:textarea>
+    <form:errors path="address" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-group">
+    <label for="phone">Phone:</label>
+    <form:input type="tel" class="form-control" path="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"/>
+    <form:errors path="phone" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-group">
+    <label for="program">Program:</label>
+    <form:select class="form-control" path="program" required="true">
+      <option value="">Select Program</option>
+      <option value="Computer Science">Computer Science</option>
+      <option value="Mathematics">Mathematics</option>
+      <option value="Engineering">Engineering</option>
+    </form:select>
+    <form:errors path="program" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-group">
+    <label for="dob">Date of Birth:</label>
+    <form:input type="date" class="form-control" path="dob" required="true"/>
+    <form:errors path="dob" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-check form-check-inline">
+    <form:radiobutton path="isFullTime" value="true" label="Full Time"/>  </div>
+  <div class="form-check form-check-inline">
+    <form:radiobutton path="isFullTime" value="false" label="Part Time"/>  <form:errors path="isFullTime" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-group">
+    <label for="courses">Courses (select all that apply):</label><br>
+    <div class="form-check form-check-inline">
+      <form:checkbox path="courses" value="Java" label="Java"/>  </div>
+    <div class="form-check form-check-inline">
+      <form:checkbox path="courses" value="Python" label="Python"/>  </div>
+    <div class="form-check form-check-inline">
+      <form:checkbox path="courses" value="Database Management" label="Database Management"/>  </div>
+    <form:errors path="courses" cssClass="text-danger" element="div"/>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+
+</form:form>
+
+</body>
+</html>
+
+
+
+
+4. StudentAdmissionController.java:
+
+package com.example.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.example.model.Student;
+
+@Controller
+public class StudentAdmissionController {
+
+    @GetMapping("/studentAdmission")
+    public String showAdmissionForm(Model model) {
+        model.addAttribute("student", new Student()); // Create an empty student object for form binding
+        return "student_form";
+    }
+
+    @PostMapping("/submitAdmission")
+    public String submitAdmission(@ModelAttribute Student student, Model model) {
+        // Access student information from the submitted form
+        String name = student.getName();
+        String email = student.getEmail();
+        // ... access other student attributes
+
+        // (Optional) Perform any validation or processing logic here
+
+        model.addAttribute("student", student); // Add student object to the model for display
+        return "student_details"; // View to display submitted information
+    }
+}
+
+

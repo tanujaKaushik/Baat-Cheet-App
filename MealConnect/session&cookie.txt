@@ -1,0 +1,67 @@
+Write a servlet program for session management using HTTP Session along 
+with tracking and also use a cookie for session tracking. 
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@WebServlet("/SessionExampleServlet")
+public class SessionExampleServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        // Get or create HttpSession
+        HttpSession session = request.getSession(true);
+
+        // Get session ID
+        String sessionId = session.getId();
+
+        // Check if this is a new session
+        boolean isNewSession = session.isNew();
+
+        // Get session attribute 'visitCount' (for counting visits)
+        Integer visitCount = (Integer) session.getAttribute("visitCount");
+        if (visitCount == null) {
+            visitCount = 1;
+        } else {
+            visitCount++;
+        }
+        session.setAttribute("visitCount", visitCount);
+
+        // Create or retrieve cookie for session tracking
+        Cookie sessionCookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("sessionId")) {
+                    sessionCookie = cookie;
+                    break;
+                }
+            }
+        }
+        if (sessionCookie == null) {
+            sessionCookie = new Cookie("sessionId", sessionId);
+            sessionCookie.setMaxAge(30 * 60); // Cookie expires in 30 minutes
+            response.addCookie(sessionCookie);
+        }
+
+        // Display session information
+        out.println("<html><body>");
+        out.println("<h2>Session Management Example</h2>");
+        out.println("<p>Session ID: " + sessionId + "</p>");
+        out.println("<p>Is New Session: " + (isNewSession ? "Yes" : "No") + "</p>");
+        out.println("<p>Visit Count: " + visitCount + "</p>");
+        out.println("<p>Session Cookie Value: " + sessionCookie.getValue() + "</p>");
+        out.println("</body></html>");
+    }
+}

@@ -1,0 +1,60 @@
+Create an HTML form with the input of student information using HTTP 
+Protocol and method, then display the input information using Servlet.
+
+----->student-form.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Information Form</title>
+</head>
+<body>
+    <h2>Student Information Form</h2>
+    <form action="StudentInfoServlet" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        
+        <label for="course">Course:</label>
+        <input type="text" id="course" name="course" required><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+
+
+----->StudentInfoServlet.java
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/StudentInfoServlet")
+public class StudentInfoServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        
+        // Retrieve parameters from the form submission
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String course = request.getParameter("course");
+
+        // Display the student information
+        out.println("<html><body>");
+        out.println("<h2>Student Information</h2>");
+        out.println("<p>Name: " + name + "</p>");
+        out.println("<p>Email: " + email + "</p>");
+        out.println("<p>Course: " + course + "</p>");
+        out.println("</body></html>");
+    }
+}
+

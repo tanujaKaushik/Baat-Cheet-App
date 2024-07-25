@@ -1,0 +1,72 @@
+Create a JSP Page for database connectivity using JDBC and show the 
+students details from the database created during exercise no 5 in session 1. 
+
+
+Create a JSP page named studentDetails.jsp in your web application directory. This page will connect to the database using JDBC, fetch student details, and display them.
+
+
+---->studentDetails.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Student Details</title>
+</head>
+<body>
+    <h2>Student Details</h2>
+
+    <%
+        // JDBC connection parameters
+        String jdbcURL = "jdbc:mysql://localhost:3306/IGNOU";
+        String jdbcUsername = "your_username";
+        String jdbcPassword = "your_password";
+        
+        // JDBC variables
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        
+        try {
+            // Load the JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
+            
+            // Establish the connection
+            connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+            
+            // SQL query to fetch student details
+            String sql = "SELECT * FROM Student";
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+            
+            // Display student details
+            while (resultSet.next()) {
+                out.println("<p>");
+                out.println("Student ID: " + resultSet.getInt("student_id") + "<br>");
+                out.println("Name: " + resultSet.getString("name") + "<br>");
+                out.println("Email: " + resultSet.getString("email") + "<br>");
+                out.println("Phone: " + resultSet.getString("phone") + "<br>");
+                out.println("Address: " + resultSet.getString("address") + "<br>");
+                out.println("Enrollment Date: " + resultSet.getDate("enrollment_date") + "<br>");
+                out.println("Course: " + resultSet.getString("course") + "<br>");
+                out.println("</p>");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            out.println("Error: " + e.getMessage());
+        } finally {
+            // Close JDBC objects in reverse order of creation to avoid leaks
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                out.println("Error closing JDBC objects: " + e.getMessage());
+            }
+        }
+    %>
+
+</body>
+</html>

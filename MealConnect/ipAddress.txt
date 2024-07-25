@@ -1,0 +1,39 @@
+Write a servlet program to capture client IPs and display it
+
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+ behind a proxy server (e.g., Load Balancer)  
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/clientIP")
+public class ClientIpServlet extends HttpServlet {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+
+    response.setContentType("text/html");
+    PrintWriter out = response.getWriter();
+
+    // Try getting the client IP from the "X-Forwarded-For" header 
+    // (useful behind proxy servers)
+    String ipAddress = request.getHeader("X-Forwarded-For"); 
+
+    // If not available, use the remote address
+    if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+      ipAddress = request.getRemoteAddr();
+    }
+
+    out.println("<html><body>");
+    out.println("<h2>Client IP Address</h2>");
+    out.println("<p>Your IP address is: " + ipAddress + "</p>");
+    out.println("</body></html>");
+  }
+}
+
+

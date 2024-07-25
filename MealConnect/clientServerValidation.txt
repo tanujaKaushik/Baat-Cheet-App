@@ -1,0 +1,128 @@
+Apply the client validation in the form created in the above exercise 4 of 
+session 4, along with server-side validation.
+
+Spring Form with Client-Side and Server-Side Validation
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Admission Form</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+<script>
+$(document).ready(function() {
+  $("#studentForm").validate({
+    rules: {
+      name: "required",
+      email: {
+        required: true,
+        email: true
+      },
+      address: "required",
+      phone: {
+        required: true,
+        pattern: "[0-9]{3}-[0-9]{3}-[0-9]{4}"
+      },
+      program: "required",
+      dob: "required",
+      isFullTime: "required"
+    },
+    messages: {
+      name: "Please enter your name.",
+      email: {
+        required: "Please enter your email address.",
+        email: "Please enter a valid email address."
+      },
+      address: "Please enter your address.",
+      phone: {
+        required: "Please enter your phone number.",
+        pattern: "Please enter a valid phone number (XXX-XXX-XXXX)."
+      },
+      program: "Please select a program.",
+      dob: "Please select your date of birth.",
+      isFullTime: "Please select your enrollment type (Full Time/Part Time)."
+    }
+  });
+});
+</script>
+</head>
+<body>
+
+<h2>Student Admission Form</h2>
+
+<form:form id="studentForm" action="submitAdmission" method="post" modelAttribute="student">
+
+  <div class="form-group">
+    <label for="name">Name:</label>
+    <form:input type="text" class="form-control" path="name" required="true"/>
+    <form:errors path="name" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <form:input type="email" class="form-control" path="email" required="true"/>
+    <form:errors path="email" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-group">
+    <label for="address">Address:</label>
+    <form:textarea class="form-control" path="address" rows="3" required="true"></form:textarea>
+    <form:errors path="address" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-group">
+    <label for="phone">Phone:</label>
+    <form:input type="tel" class="form-control" path="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required="true"/>
+    <form:errors path="phone" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-group">
+    <label for="program">Program:</label>
+    <form:select class="form-control" path="program" required="true">
+      <option value="">Select Program</option>
+      <option value="Computer Science">Computer Science</option>
+      <option value="Mathematics">Mathematics</option>
+      <option value="Engineering">Engineering</option>
+    </form:select>
+    <form:errors path="program" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-group">
+    <label for="dob">Date of Birth:</label>
+    <form:input type="date" class="form-control" path="dob" required="true"/>
+    <form:errors path="dob" cssClass="text-danger" element="div"/>
+  </div>
+
+    <div class="form-check form-check-inline">
+    <form:radiobutton path="isFullTime" value="true" label="Full Time"/>
+  </div>
+  <div class="form-check form-check-inline">
+    <form:radiobutton path="isFullTime" value="false" label="Part Time"/>
+    <form:errors path="isFullTime" cssClass="text-danger" element="div"/>
+  </div>
+
+  <div class="form-group">
+    <label for="courses">Courses (select all that apply):</label><br>
+    <div class="form-check form-check-inline">
+      <form:checkbox path="courses" value="Java" label="Java"/>
+    </div>
+    <div class="form-check form-check-inline">
+      <form:checkbox path="courses" value="Python" label="Python"/>
+    </div>
+    <div class="form-check form-check-inline">
+      <form:checkbox path="courses" value="Database Management" label="Database Management"/>
+    </div>
+    <form:errors path="courses" cssClass="text-danger" element="div"/>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+
+</form:form>
+
+</body>
+</html>

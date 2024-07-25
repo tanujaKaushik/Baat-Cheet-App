@@ -1,0 +1,80 @@
+ Configure Bootstrap in Spring MVC and use default styling classes in the 
+form and view created in the above exercises.
+
+------>Add Bootstrap dependency:
+
+Configure your project (Maven or Gradle) to include the Bootstrap CSS dependency. Here's an example for Maven:
+
+xml
+<dependency>
+  <groupId>org.webjars</groupId>
+  <artifactId>bootstrap</artifactId>
+  <version>4.5.2</version>
+</dependency>
+
+
+------>Resource Handler:
+
+In your Spring MVC configuration (e.g., dispatcher-servlet.xml or a Java config class), add a resource handler to map requests for Bootstrap resources to the webjars location:
+
+<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+
+@EnableWebMvc
+public class WebConfig extends WebMvcConfigurerAdapter {
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+  }
+}
+
+
+------>3. Include Bootstrap CSS in JSP:
+
+
+In your student_form.jsp, use a <link> tag to reference the Bootstrap CSS file:
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Admission Form</title>
+  <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/4.5.2/css/bootstrap.min.css" />">
+</head>
+<body>
+  </body>
+</html>
+
+
+------->4. Use Bootstrap Classes:
+
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Admission Form</title>
+  <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/4.5.2/css/bootstrap.min.css" />">
+</head>
+<body>
+  <h2>Student Admission Form</h2>
+
+  <form:form id="studentForm" action="submitAdmission" method="post" modelAttribute="student" class="form-horizontal">
+
+    <div class="form-group">
+      <label for="name" class="col-sm-2 control-label">Name:</label>
+      <div class="col-sm-10">
+        <form:input type="text" class="form-control" path="name" required="true"/>
+        <form:errors path="name" cssClass="text-danger" element="div"/>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+  </form:form>
+
+</body>
+</html>
+
+
+
+

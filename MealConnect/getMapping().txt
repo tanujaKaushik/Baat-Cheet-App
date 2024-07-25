@@ -1,0 +1,84 @@
+
+Here's a basic Spring program demonstrating a controller with @GetMapping() and displaying a response in a view:
+
+----> Message.java (Model Class - Optional):
+
+package com.example.model;
+public class Message {
+    private String content;
+    public Message(String content) {
+        this.content = content;
+    }
+    public String getContent() {
+        return content;
+    }
+}
+
+
+--->3. WelcomeController.java:
+
+package com.example.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class WelcomeController {
+
+    @GetMapping("/welcome")
+    public String welcome(Model model) {
+        // You can optionally use a model object to pass data to the view
+        model.addAttribute("message", "Welcome to Spring MVC!");
+        return "welcome"; // Name of the view (JSP)
+    }
+}
+
+------->welcome.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome with Spring MVC</title>
+</head>
+<body>
+<h1>
+<%-- Access data from the model if any --%>
+<% 
+  String message = (String) request.getAttribute("message");
+  if (message != null) {
+    out.println(message);
+  }
+%>
+</h1>
+</body>
+</html>
+
+---->pom.xml
+
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+</dependencies>
+
+
+
+Explanation:
+
+We create a controller class (WelcomeController) with a @Controller annotation.
+We define a method welcome annotated with @GetMapping("/welcome"). This maps HTTP GET requests to the "/welcome" URL to this method.
+The welcome method takes a Model object as an argument. You can use this to add data (like a Message object) to be passed to the view.
+The method returns the name of the view (JSP) to render, which is "welcome" in this case.
+The welcome.jsp displays the message passed through the model (if any).
+Running the application:
+
+Make sure you have Maven installed.
+Open a terminal in the project directory.
+Run mvn spring-boot:run. This will start the embedded Spring Boot application server.
+Access http://localhost:8080/welcome in your web browser. You should see "Welcome to Spring MVC!" displayed.
+
